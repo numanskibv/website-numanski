@@ -84,6 +84,7 @@ services:
       - ./api:/var/www/api:ro
       - ./php-fpm.conf:/usr/local/etc/php-fpm.d/zz-numanski.conf:ro
       - ./php.ini:/usr/local/etc/php/conf.d/zz-numanski.ini:ro
+      - ./run/secrets:/run/secrets:ro   # secrets als file, niet env
 
     environment:
       SMTP_HOST: smtp.gmail.com
