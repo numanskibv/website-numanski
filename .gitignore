@@ -18,5 +18,4 @@
 # Logs
 *.log
 
-# Docker — lokale overrides nooit committen
-docker-compose.override.yml
+# (docker-compose.override.yml committen we wél — voegt 'build:' toe voor lokale dev)
