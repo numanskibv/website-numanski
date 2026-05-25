@@ -33,7 +33,7 @@ services:
     networks:
       - npm
 
-    # ─── Hardening ────────────────────────────────────────────────
+    # ─── Hardening ──────────────────────────────────────────────
     read_only: true
     tmpfs:
       - /run:size=8M,mode=0755
