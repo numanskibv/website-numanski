@@ -1,7 +1,8 @@
 # Numanski — Static site deployment (achter Nginx Proxy Manager)
-# Quick start:   docker compose up -d --build
-# Logs:          docker compose logs -f
-# Stop:          docker compose down
+# Quick start (lokaal):    docker compose up -d --build
+# Quick start (prod/GHCR): docker compose pull && docker compose up -d
+# Logs:                    docker compose logs -f
+# Stop:                    docker compose down
 #
 # De container wordt NIET op de host gepubliceerd. Hij is alleen
 # bereikbaar binnen het NPM-Docker-netwerk. Zet in NPM een Proxy Host:
@@ -11,10 +12,14 @@
 #
 # Vind de juiste netwerknaam:  docker network ls
 # Pas hem aan onderaan dit bestand (default: 'npm').
+#
+# Image-naam is parametriseerbaar via env:
+#   Lokaal:   build maakt 'numanski-web:local'
+#   Server:   .env bevat  NUMANSKI_IMAGE=ghcr.io/numanskibv/website-numanski:latest
 
 services:
   numanski-web:
-    image: numanski-web:latest
+    image: ${NUMANSKI_IMAGE:-numanski-web:local}
     container_name: numanski-web
     build:
       context: .
