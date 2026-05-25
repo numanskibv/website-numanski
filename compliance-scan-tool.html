@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#1a1a1a">
+<meta name="description" content="Numanski Compliance & Keten Scan — interactieve PSO-audit voor NIS2, ISO 27001 en NEN 7510. Lokale dashboard-tool voor sessies met klanten.">
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='95 65 285 320'%3E%3Crect x='110' y='140' width='55' height='55' rx='12' fill='%23d2e6a3'/%3E%3Crect x='110' y='200' width='55' height='55' rx='12' fill='%23d2e6a3'/%3E%3Crect x='110' y='260' width='55' height='55' rx='12' fill='%23737577'/%3E%3Crect x='175' y='200' width='55' height='55' rx='12' fill='%23737577'/%3E%3Crect x='175' y='260' width='55' height='55' rx='12' fill='%23d2e6a3'/%3E%3Crect x='175' y='320' width='55' height='55' rx='12' fill='%23737577'/%3E%3Crect x='240' y='80' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='240' y='140' width='55' height='55' rx='12' fill='%23737577'/%3E%3Crect x='240' y='200' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='240' y='260' width='55' height='55' rx='12' fill='%23737577'/%3E%3Crect x='240' y='320' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='305' y='80' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='305' y='200' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='305' y='260' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3Crect x='305' y='320' width='55' height='55' rx='12' fill='%2399cc33'/%3E%3C/svg%3E">
+
+<title>Compliance & Keten Scan — Numanski</title>
+
+<style>
+  :root {
+    /* Brand */
+    --lime: #99cc33;
+    --lime-deep: #82b125;
+    --sage: #d2e6a3;
+    --gray-brand: #737577;
+
+    /* Dark surfaces */
+    --bg: #1a1a1a;
+    --bg-deep: #0f0f0f;
+    --bg-elev: #222222;
+    --bg-elev-2: #2a2a2a;
+    --bg-card: #1f1f1f;
+
+    /* Foreground */
+    --fg: #f5f5f3;
+    --fg-muted: #a8a8a5;
+    --fg-dim: #6b6b6b;
+
+    /* Borders */
+    --border: #2a2a2a;
+    --border-strong: #3a3a3a;
+    --border-accent: color-mix(in oklab, var(--lime) 35%, transparent);
+
+    /* Status */
+    --danger: #e0664a;
+    --warning: #e8c547;
+    --ok: var(--lime);
+
+    /* Frameworks */
+    --fw-nis2: #6aa8e8;
+    --fw-iso: #c785e0;
+    --fw-nen: var(--lime);
+
+    /* Tokens */
+    --maxw: 1180px;
+    --pad: clamp(1.25rem, 4vw, 2.5rem);
+    --radius: 6px;
+    --radius-lg: 10px;
+    --fs-display: clamp(1.7rem, 3.4vw, 2.4rem);
+    --fs-h2: clamp(1.2rem, 1.8vw, 1.5rem);
+    --fs-body: clamp(0.95rem, 1vw, 1rem);
+    --stack: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: var(--fs-body)/1.55 var(--stack);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    min-height: 100svh;
+  }
+
+  ::selection { background: var(--lime); color: var(--bg-deep); }
+
+  a { color: var(--lime); text-decoration: none; text-underline-offset: 3px;
+      &:hover, &:focus-visible { text-decoration: underline; } }
+  :focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; border-radius: 3px; }
+
+  img, svg { max-width: 100%; height: auto; display: block; }
+
+  h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; color: var(--fg); }
+  h1 { font-size: var(--fs-display); letter-spacing: -0.035em; }
+  h2 { font-size: var(--fs-h2); }
+  h3 { font-size: 1.02rem; letter-spacing: -0.015em; }
+  p { margin: 0; color: var(--fg-muted); }
+
+  .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  .container { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--fg-muted);
+
+    &::before {
+      content: ""; width: 8px; height: 8px; border-radius: 2px; background: var(--lime);
+    }
+  }
+
+  /* ─── Header ──────────────────────────────────────── */
+  .topbar {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in oklab, var(--bg-deep) 88%, transparent);
+    backdrop-filter: saturate(140%) blur(12px);
+    -webkit-backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--border);
+
+    & .container {
+      display: flex; align-items: center; justify-content: space-between;
+      min-height: 64px; gap: 1rem;
+    }
+  }
+
+  .brand {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    font-weight: 600; letter-spacing: -0.025em; color: var(--fg);
+
+    & .mark { width: 34px; height: 34px; flex: 0 0 34px; }
+    & .mark .g-light { fill: var(--sage); }
+    & .mark .g-dark  { fill: var(--gray-brand); }
+    & .mark .g-green { fill: var(--lime); }
+
+    & .wordmark {
+      font-size: 1rem; color: var(--fg-muted);
+      & b { color: var(--fg); font-weight: 600; }
+      & span.tool {
+        margin-left: 0.5rem; padding-left: 0.65rem;
+        border-left: 1px solid var(--border-strong);
+        font-family: var(--mono); font-size: 0.78rem;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--lime);
+      }
+    }
+    &:hover { text-decoration: none; }
+  }
+
+  .nav-back {
+    font-size: 0.88rem; color: var(--fg-muted);
+    &:hover, &:focus-visible { color: var(--fg); text-decoration: none; }
+  }
+
+  /* ─── Intro + Framework Strip ─────────────────────── */
+  .intro {
+    padding-block: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 3vw, 2rem);
+    background:
+      radial-gradient(70% 60% at 100% 0%, color-mix(in oklab, var(--lime) 8%, transparent), transparent 60%),
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .intro-inner { display: grid; gap: 1rem; max-width: 70ch; }
+  .intro p.lead { font-size: clamp(0.98rem, 1.1vw, 1.08rem); }
+
+  .session-meta {
+    display: flex; flex-wrap: wrap; gap: 0.4rem 1rem;
+    margin-top: 0.75rem; font-family: var(--mono); font-size: 0.76rem;
+    color: var(--fg-dim); letter-spacing: 0.04em;
+  }
+  .session-meta b { color: var(--fg); font-weight: 600; }
+
+  .framework-strip {
+    position: sticky; top: 64px; z-index: 15;
+    padding-block: 0.85rem;
+    background: color-mix(in oklab, var(--bg-deep) 90%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+
+    & .container {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    }
+  }
+
+  .framework-label {
+    font-family: var(--mono); font-size: 0.74rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+
+  .framework-chips {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    font: inherit; font-size: 0.85rem; font-weight: 500;
+    background: transparent; color: var(--fg-muted);
+    border: 1px solid var(--border-strong); border-radius: 999px;
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+
+    &::before {
+      content: ""; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--chip-color, var(--gray-brand));
+      box-shadow: 0 0 0 0 transparent;
+      transition: box-shadow .15s ease;
+    }
+
+    &[aria-pressed="true"] {
+      background: var(--bg-elev-2); color: var(--fg);
+      border-color: var(--chip-color, var(--gray-brand));
+      &::before { box-shadow: 0 0 0 3px color-mix(in oklab, var(--chip-color) 30%, transparent); }
+    }
+    &:hover { color: var(--fg); border-color: var(--border-strong); }
+
+    &[data-fw="NIS2"]      { --chip-color: var(--fw-nis2); }
+    &[data-fw="ISO27001"]  { --chip-color: var(--fw-iso); }
+    &[data-fw="NEN7510"]   { --chip-color: var(--fw-nen); }
+  }
+
+  /* ─── Main ────────────────────────────────────────── */
+  main { padding-block: 2.5rem 3rem; }
+
+  .pillar {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    overflow: hidden;
+  }
+
+  .pillar-header {
+    display: flex; align-items: center; gap: 0.9rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-elev);
+    border-bottom: 1px solid var(--border);
+
+    & .marker {
+      display: inline-grid; place-items: center;
+      width: 32px; height: 32px; border-radius: 6px;
+      font-family: var(--mono); font-weight: 700; font-size: 0.95rem;
+      color: var(--bg-deep);
+    }
+    & .meta {
+      margin-left: auto; font-family: var(--mono); font-size: 0.76rem;
+      letter-spacing: 0.06em; color: var(--fg-dim);
+      & .score { color: var(--fg); font-weight: 600; }
+    }
+
+    .pillar[data-pillar="P"] & .marker { background: var(--lime); }
+    .pillar[data-pillar="S"] & .marker { background: var(--gray-brand); color: var(--fg); }
+    .pillar[data-pillar="O"] & .marker { background: var(--sage); }
+  }
+
+  .pillar-title-block .sub {
+    display: block; margin-top: 0.1rem;
+    font-family: var(--mono); font-size: 0.72rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--fg-dim); font-weight: 500;
+  }
+
+  .questions { display: grid; gap: 1px; background: var(--border); }
+
+  .question {
+    background: var(--bg-card); padding: 1.25rem 1.25rem 1.4rem;
+    display: grid; gap: 0.85rem;
+
+    &.hidden { display: none; }
+  }
+
+  .q-header {
+    display: flex; align-items: flex-start; gap: 1rem; flex-wrap: wrap;
+
+    & h3 { flex: 1 1 60ch; min-width: 14rem; }
+  }
+
+  .fw-badges {
+    display: flex; flex-wrap: wrap; gap: 0.35rem;
+    flex: 0 0 auto;
+  }
+
+  .fw-badge {
+    font-family: var(--mono); font-size: 0.66rem; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.18rem 0.5rem;
+    border: 1px solid var(--badge-color, var(--border-strong));
+    color: var(--badge-color, var(--fg-muted));
+    border-radius: 999px; line-height: 1.4;
+
+    &[data-fw="NIS2"]     { --badge-color: var(--fw-nis2); }
+    &[data-fw="ISO27001"] { --badge-color: var(--fw-iso); }
+    &[data-fw="NEN7510"]  { --badge-color: var(--fw-nen); }
+  }
+
+  /* Segmented control */
+  .segmented {
+    margin: 0; padding: 0; border: 0;
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+
+    & input { position: absolute; opacity: 0; pointer-events: none; }
+
+    & label {
+      flex: 1 1 14rem; min-width: 12rem;
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.7rem 0.9rem;
+      background: var(--bg-elev); color: var(--fg-muted);
+      border: 1px solid var(--border-strong); border-radius: var(--radius);
+      cursor: pointer; font-size: 0.92rem;
+      transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+
+      & .opt-marker {
+        flex: 0 0 14px; width: 14px; height: 14px; border-radius: 50%;
+        border: 2px solid var(--border-strong);
+        transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease;
+      }
+
+      &:hover { color: var(--fg); border-color: var(--fg-dim); }
+    }
+
+    & input:focus-visible + label { outline: 2px solid var(--lime); outline-offset: 2px; }
+
+    & input:checked + label {
+      background: color-mix(in oklab, var(--lime) 12%, var(--bg-elev));
+      color: var(--fg);
+      border-color: var(--lime);
+
+      & .opt-marker {
+        background: var(--lime); border-color: var(--lime);
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--lime) 30%, transparent);
+      }
+    }
+  }
+
+  /* ─── Action bar ──────────────────────────────────── */
+  .actions {
+    margin-top: 2rem;
+    padding: 1.25rem; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 1rem;
+  }
+
+  .progress {
+    flex: 1 1 16rem;
+    display: grid; gap: 0.4rem;
+
+    & .progress-meta {
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 0.76rem; color: var(--fg-muted);
+      & .ratio { color: var(--fg); }
+    }
+    & .bar {
+      height: 6px; background: var(--bg-elev-2); border-radius: 3px; overflow: hidden;
+      & .fill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, var(--lime-deep), var(--lime));
+        transition: width .25s ease;
+      }
+    }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 0.5rem; padding: 0.85rem 1.4rem;
+    border-radius: var(--radius); font: inherit; font-weight: 600;
+    font-size: 0.94rem; letter-spacing: -0.005em;
+    border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .15s ease;
+
+    &:hover:not(:disabled) { transform: translateY(-1px); text-decoration: none; }
+    &:active:not(:disabled) { transform: translateY(0); }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+
+  .btn-primary {
+    background: var(--lime); color: var(--bg-deep); border-color: var(--lime);
+    &:hover:not(:disabled) { background: var(--lime-deep); border-color: var(--lime-deep); }
+  }
+
+  .btn-secondary {
+    background: transparent; color: var(--fg); border-color: var(--border-strong);
+    &:hover:not(:disabled) { border-color: var(--fg); background: var(--bg-elev); }
+  }
+
+  .btn-ghost {
+    background: transparent; color: var(--fg-muted);
+    padding: 0.5rem 0.85rem; font-size: 0.86rem; border-color: var(--border);
+    &:hover:not(:disabled) { color: var(--fg); border-color: var(--border-strong); background: var(--bg-elev); }
+  }
+
+  /* ─── Output ──────────────────────────────────────── */
+  .output {
+    margin-top: 2.5rem; padding: 1.5rem;
+    background: var(--bg-deep);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+    display: grid; gap: 1rem;
+
+    &[hidden] { display: none; }
+  }
+
+  .output-head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem;
+    justify-content: space-between;
+    padding-bottom: 1rem; border-bottom: 1px solid var(--border);
+
+    & .tools { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  }
+
+  .output-title { display: grid; gap: 0.3rem; }
+
+  .output textarea {
+    width: 100%; min-height: 480px; resize: vertical;
+    padding: 1.1rem 1.25rem;
+    background: var(--bg); color: var(--fg);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    font-family: var(--mono); font-size: 0.85rem; line-height: 1.6;
+    tab-size: 2;
+
+    &:focus-visible { border-color: var(--lime); outline: none; }
+  }
+
+  .toast {
+    font-family: var(--mono); font-size: 0.76rem; color: var(--lime);
+    opacity: 0; transition: opacity .2s ease; align-self: center;
+    &[data-show="true"] { opacity: 1; }
+  }
+
+  /* ─── Footer ──────────────────────────────────────── */
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding-block: 1.5rem; font-size: 0.84rem; color: var(--fg-dim);
+    background: var(--bg-deep);
+
+    & .container {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    & a { color: var(--fg-muted); &:hover { color: var(--fg); } }
+  }
+
+  /* ─── Responsive ──────────────────────────────────── */
+  @media (max-width: 720px) {
+    .topbar .container { min-height: 56px; }
+    .framework-strip { top: 56px; }
+    .framework-label { width: 100%; }
+    .wordmark .tool { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="Numanski — Hoofdsite">
+      <svg class="mark" viewBox="95 65 285 320" role="img" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+        <rect x="110" y="140" width="55" height="55" rx="12" class="g-light"/>
+        <rect x="110" y="200" width="55" height="55" rx="12" class="g-light"/>
+        <rect x="110" y="260" width="55" height="55" rx="12" class="g-dark"/>
+        <rect x="175" y="200" width="55" height="55" rx="12" class="g-dark"/>
+        <rect x="175" y="260" width="55" height="55" rx="12" class="g-light"/>
+        <rect x="175" y="320" width="55" height="55" rx="12" class="g-dark"/>
+        <rect x="240" y="80"  width="55" height="55" rx="12" class="g-green"/>
+        <rect x="240" y="140" width="55" height="55" rx="12" class="g-dark"/>
+        <rect x="240" y="200" width="55" height="55" rx="12" class="g-green"/>
+        <rect x="240" y="260" width="55" height="55" rx="12" class="g-dark"/>
+        <rect x="240" y="320" width="55" height="55" rx="12" class="g-green"/>
+        <rect x="305" y="80"  width="55" height="55" rx="12" class="g-green"/>
+        <rect x="305" y="200" width="55" height="55" rx="12" class="g-green"/>
+        <rect x="305" y="260" width="55" height="55" rx="12" class="g-green"/>
+        <rect x="305" y="320" width="55" height="55" rx="12" class="g-green"/>
+      </svg>
+      <span class="wordmark"><b>numanski</b>&nbsp;<span class="tool">Compliance &amp; Keten Scan</span></span>
+    </a>
+    <a class="nav-back" href="index.html">← Hoofdsite</a>
+  </div>
+</header>
+
+<section class="intro">
+  <div class="container intro-inner">
+    <span class="eyebrow">Numanski Audit Engine · v1</span>
+    <h1>Compliance &amp; Keten Scan</h1>
+    <p class="lead">
+      Een lokale, sessie-gedreven audit van jouw softwareketen tegen <b style="color:var(--fg);">NIS2</b>,
+      <b style="color:var(--fg);">ISO 27001</b> en <b style="color:var(--fg);">NEN 7510</b>, gestructureerd
+      volgens de Numanski PSO-methodiek. Antwoorden worden alleen lokaal bewaard; er gaat niets naar een server.
+    </p>
+    <div class="session-meta">
+      <span>Sessie: <b id="session-date"></b></span>
+      <span>Engine: <b>Zero-Dependency · vanilla HTML/CSS/JS</b></span>
+      <span>Methodiek: <b>PSO (Processen · Systemen · Organisatie)</b></span>
+    </div>
+  </div>
+</section>
+
+<section class="framework-strip" aria-label="Selecteer compliance-frameworks">
+  <div class="container">
+    <span class="framework-label">Frameworks in scope</span>
+    <div class="framework-chips" role="group" aria-label="Framework-toggles">
+      <button type="button" class="chip" data-fw="NIS2"     aria-pressed="true">NIS2 Wetgeving</button>
+      <button type="button" class="chip" data-fw="ISO27001" aria-pressed="true">ISO 27001 Norm</button>
+      <button type="button" class="chip" data-fw="NEN7510"  aria-pressed="true">NEN 7510 (Zorg)</button>
+    </div>
+  </div>
+</section>
+
+<main class="container" id="main">
+
+  <section class="pillar" data-pillar="P" aria-labelledby="pillar-P-title">
+    <header class="pillar-header">
+      <span class="marker" aria-hidden="true">P</span>
+      <div class="pillar-title-block">
+        <h2 id="pillar-P-title">Processen</h2>
+        <span class="sub">Governance · Beleid · Meldketen</span>
+      </div>
+      <span class="meta"><span class="score" data-pillar-score="P">0 / 0</span></span>
+    </header>
+    <div class="questions" data-pillar="P"></div>
+  </section>
+
+  <section class="pillar" data-pillar="S" aria-labelledby="pillar-S-title">
+    <header class="pillar-header">
+      <span class="marker" aria-hidden="true">S</span>
+      <div class="pillar-title-block">
+        <h2 id="pillar-S-title">Systemen</h2>
+        <span class="sub">Software · Dependencies · Infrastructuur</span>
+      </div>
+      <span class="meta"><span class="score" data-pillar-score="S">0 / 0</span></span>
+    </header>
+    <div class="questions" data-pillar="S"></div>
+  </section>
+
+  <section class="pillar" data-pillar="O" aria-labelledby="pillar-O-title">
+    <header class="pillar-header">
+      <span class="marker" aria-hidden="true">O</span>
+      <div class="pillar-title-block">
+        <h2 id="pillar-O-title">Organisatie</h2>
+        <span class="sub">Cultuur · Training · Gedrag</span>
+      </div>
+      <span class="meta"><span class="score" data-pillar-score="O">0 / 0</span></span>
+    </header>
+    <div class="questions" data-pillar="O"></div>
+  </section>
+
+  <div class="actions">
+    <div class="progress" aria-label="Voortgang">
+      <div class="progress-meta">
+        <span>Voortgang</span>
+        <span><span class="ratio" id="progress-ratio">0 / 0</span> beantwoord</span>
+      </div>
+      <div class="bar"><div class="fill" id="progress-fill"></div></div>
+    </div>
+    <button type="button" id="generate" class="btn btn-primary">Genereer Numanski Actieplan →</button>
+    <button type="button" id="reset" class="btn btn-secondary">Reset sessie</button>
+  </div>
+
+  <section class="output" id="output-section" hidden aria-live="polite" aria-labelledby="output-title">
+    <div class="output-head">
+      <div class="output-title">
+        <span class="eyebrow">Gegenereerd Actieplan</span>
+        <h2 id="output-title">Numanski Compliance Roadmap</h2>
+      </div>
+      <div class="tools">
+        <span class="toast" id="toast" aria-hidden="true">Gekopieerd ✓</span>
+        <button type="button" id="copy" class="btn btn-ghost">Kopieer Markdown</button>
+        <button type="button" id="download" class="btn btn-ghost">Download .md</button>
+      </div>
+    </div>
+    <textarea id="output-md" readonly aria-label="Gegenereerd Markdown-actieplan" spellcheck="false"></textarea>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div>© <span id="footer-year">2026</span> Numanski — Compliance &amp; Keten Scan. Sparsessie?
+      <a href="mailto:marco@numanski.nl">marco@numanski.nl</a>
+    </div>
+    <nav aria-label="Footer"><a href="index.html">← Terug naar Numanski.nl</a></nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  'use strict';
+
+  // ─── Data ────────────────────────────────────────────────────────
+  const QUESTIONS = [
+    // Processen
+    {
+      id: 'p1', pillar: 'P', frameworks: ['NIS2', 'ISO27001'],
+      text: 'Bestaat er een formele inkoop- en update-policy voor third-party software libraries?',
+      options: [
+        { v: 'nee',   label: 'Nee — geen beleid of documentatie',           score: 0 },
+        { v: 'deels', label: 'Deels — informeel, niet aantoonbaar',         score: 1 },
+        { v: 'ja',    label: 'Ja — formeel gedocumenteerd en gehandhaafd',  score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Stel binnen 30 dagen een schriftelijke library-policy op met verplichte velden per package: maintainer-reputatie, downloadcijfers, license, en open CVE-overzicht. Verplicht signoff van een security-lead of architect vóór elke nieuwe adoptie.', strat: 'Veranker de policy in het inkoopproces én in CI/CD; zonder dit blijft NIS2 art. 21.2.d (supply chain) feitelijk onbeheerd.' },
+        deels: { sev: 'warning',  tech: 'Formaliseer de bestaande informele praktijk in een 1-pager. Voeg quarterly review-momenten toe in het PSO-overleg met meetbare KPI\'s (aantal nieuwe deps, aantal geweigerd, aantal CVE\'s).', strat: 'Een "informele afspraak" is geen audit trail; bij een NIS2-incident vereist de toezichthouder bewijsbare governance.' }
+      }
+    },
+    {
+      id: 'p2', pillar: 'P', frameworks: ['NIS2', 'ISO27001', 'NEN7510'],
+      text: 'Wordt elke nieuwe third-party library expliciet beoordeeld op security, onderhoud en licentie vóór adoptie?',
+      options: [
+        { v: 'nee',   label: 'Nee — developers kiezen ad-hoc',              score: 0 },
+        { v: 'deels', label: 'Deels — wel bij grote, niet bij kleine deps', score: 1 },
+        { v: 'ja',    label: 'Ja — elk package wordt formeel gevet',        score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Implementeer een blocking dependency-vet-stap in CI. Concrete tooling: `composer audit` (PHP 8.2+), GitHub Dependabot, Snyk of OSV-Scanner. Geen merge zonder schone audit-output.', strat: 'Het laravel-lang-incident (mei 2026) is de scherpste case: één gecompromitteerde maintainer kan duizenden installaties besmetten. Zonder vetting is dat een ongebreidelde aansprakelijkheid.' },
+        deels: { sev: 'warning',  tech: 'Verwijder het onderscheid "grote / kleine" packages — juist micro-packages zijn historisch het meest gecompromitteerd (event-stream, ua-parser-js, etc.). Maak vetting universeel en blocking.', strat: 'Schaal-onderscheid in vetting is een audit-vinding-die-zich-laat-zien.' }
+      }
+    },
+    {
+      id: 'p3', pillar: 'P', frameworks: ['NIS2', 'NEN7510'],
+      text: 'Bestaat een gedocumenteerde meldketen voor security-incidenten (intern, klant, autoriteiten binnen 24/72 uur)?',
+      options: [
+        { v: 'nee',   label: 'Nee — mondelinge afspraken',                   score: 0 },
+        { v: 'deels', label: 'Deels — intern wel, extern onduidelijk',       score: 1 },
+        { v: 'ja',    label: 'Ja — runbook met escalatiepaden, getest',      score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Schrijf een 1-pagina runbook: wie meldt wat, wanneer en hoe. NIS2 vereist early warning binnen 24u en formeel rapport binnen 72u bij het NCSC; voor zorginstellingen ook melding bij Z-CERT en Autoriteit Persoonsgegevens.', strat: 'Test jaarlijks via een tabletop-exercise; de overheid kijkt bij een incident naar bewijsbare voorbereiding, niet naar goede bedoelingen.' },
+        deels: { sev: 'warning',  tech: 'Documenteer de externe meldketen: contactgegevens NCSC, Z-CERT, AP, klant-DPO\'s. Voeg een tijdslijn-template toe voor incident reports.', strat: 'Een interne procedure zonder externe escalatie is bij NIS2-toetsing onvoldoende.' }
+      }
+    },
+    {
+      id: 'p4', pillar: 'P', frameworks: ['NIS2', 'ISO27001'],
+      text: 'Bestaat er een up-to-date Software Bill of Materials (SBOM) voor jullie core applicaties?',
+      options: [
+        { v: 'nee',   label: 'Nee — niet aanwezig',                          score: 0 },
+        { v: 'deels', label: 'Deels — handmatig, niet actueel',              score: 1 },
+        { v: 'ja',    label: 'Ja — automatisch gegenereerd per release',     score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Genereer een SBOM in CycloneDX-formaat via `composer cyclonedx-php` of `syft` als CI-stap. Archiveer SBOM per release in een tamper-evident store (artifact registry met retention-policy).', strat: 'Zonder SBOM is NIS2-aantoonbaarheid feitelijk onmogelijk; toezichthouders vragen er expliciet om bij een onderzoek.' },
+        deels: { sev: 'warning',  tech: 'Automatiseer SBOM-generatie in CI; vermijd handmatige exports die per definitie verouderen. Voeg een SBOM-diff toe per release voor change-traceability.', strat: 'Handmatige SBOM\'s zijn een schijn-control die bij audit doorgeprikt wordt.' }
+      }
+    },
+    {
+      id: 'p5', pillar: 'P', frameworks: ['NIS2', 'ISO27001', 'NEN7510'],
+      text: 'Zijn er gedefinieerde SLA\'s voor het patchen van kritieke CVE\'s (bv. ≤72u na disclosure)?',
+      options: [
+        { v: 'nee',   label: 'Nee — patches op ad-hoc basis',                score: 0 },
+        { v: 'deels', label: 'Deels — informele praktijk, niet meetbaar',    score: 1 },
+        { v: 'ja',    label: 'Ja — meetbaar, gerapporteerd aan directie',    score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Definieer harde SLA\'s op CVSS: ≥9 binnen 24u, ≥7 binnen 72u, ≥4 binnen 30 dagen. Maak ze meetbaar via een dashboard (Grafana + prometheus exporter, of een vanilla PHP-script dat composer audit-output pareert).', strat: 'NIS2 art. 21.2.f vereist meetbare en aantoonbare patch-discipline; "we doen ons best" is bij toezicht onvoldoende.' },
+        deels: { sev: 'warning',  tech: 'Maak de SLA formeel meetbaar: log start- en eindtijd van iedere patch-cyclus. Rapporteer maandelijks aan de eindverantwoordelijke.', strat: 'Niet-meetbare SLA\'s zijn governance-theater.' }
+      }
+    },
+    // Systemen
+    {
+      id: 's1', pillar: 'S', frameworks: ['NIS2', 'ISO27001'],
+      text: 'Hoeveel actieve third-party dependencies draaien er in de core applicatie?',
+      options: [
+        { v: 'veel',    label: '>50 packages — extreem supply-chain-risico',  score: 0 },
+        { v: 'middel',  label: '10–50 — regelmatige audit nodig',             score: 1 },
+        { v: 'minimaal',label: '<10 — sovereign tech stack',                  score: 2 }
+      ],
+      remediation: {
+        veel:   { sev: 'critical', tech: 'Voer een dependency-saneringssprint uit. Quick wins: vervang `nesbot/carbon` → native `DateTimeImmutable`; vervang `guzzlehttp/guzzle` → `symfony/http-client` (lichter) of vanilla cURL; schrap utility-pakketten als `lodash-php` of `functional-php`. Doel: -50% in twee sprints, gemeten via composer.lock-diff.', strat: 'Elk extra package is een vertrouwensrelatie met een onbekende maintainer; dat is de definitie van supply-chain-exposure.' },
+        middel: { sev: 'warning',  tech: 'Audit per package: nog actief onderhouden? Bestaat een lichter alternatief? Overweeg vendoring (lokale fork in `vendor-local/`) voor stabiele micro-packages om de externe ketenexposure te kappen.', strat: 'Tien-tot-vijftig is werkbaar maar vereist actieve hygiëne, geen automatische updates.' }
+      }
+    },
+    {
+      id: 's2', pillar: 'S', frameworks: ['NIS2'],
+      text: 'In welke mate wordt native (vanilla) PHP 8.x+ gebruikt versus heavy utility-frameworks?',
+      options: [
+        { v: 'framework', label: 'Hoofdzakelijk frameworks (Laravel-style)',       score: 0 },
+        { v: 'mix',       label: 'Gemixt — framework + native waar mogelijk',      score: 1 },
+        { v: 'native',    label: 'Hoofdzakelijk vanilla PHP 8.x+',                 score: 2 }
+      ],
+      remediation: {
+        framework: { sev: 'critical', tech: 'Migratiepad: vervang abstractielagen waar PHP 8.3+ native gelijkwaardige features biedt. Voorbeelden: native `enum` i.p.v. constanten-libraries; `readonly` classes i.p.v. value-object packages; native `Fibers` i.p.v. async-libraries; native attributes (`#[...]`) i.p.v. annotation-readers. Bouw eerst een framework-light proof-of-concept naast de bestaande applicatie.', strat: 'Frameworks brengen onbeheersbare transitive dependency-trees mee; voor bedrijfskritische systemen is dat een onaanvaardbare blackbox.' },
+        mix:       { sev: 'warning',  tech: 'Stel een Numanski Native-First Code Standard op: framework alleen waar de toegevoegde waarde aantoonbaar is. Maak een lijst van toegestane vs. ongewenste packages als levend document.', strat: 'Mixed-mode is werkbaar maar vereist disciplinaire grenzen, anders kruipt het framework geleidelijk in elke nieuwe module.' }
+      }
+    },
+    {
+      id: 's3', pillar: 'S', frameworks: ['NIS2', 'ISO27001'],
+      text: 'Wordt `composer.lock` strikt gehandhaafd én geauditeerd via een verplichte CI-stap?',
+      options: [
+        { v: 'nee',   label: 'Nee — niet altijd committed of geauditeerd',     score: 0 },
+        { v: 'deels', label: 'Deels — committed, geen CI-audit',               score: 1 },
+        { v: 'ja',    label: 'Ja — `composer audit` is blocking in CI',        score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Voeg `composer audit --locked --no-dev` toe als verplichte CI-stap; merge faalt bij CVE-uitkomst. Pin packages op exact-version waar mogelijk (geen `^` voor security-kritieke libraries). Commit altijd composer.lock.', strat: 'Zonder lockfile-discipline is reproducibility verloren; dat ondergraaft alle andere security-controls.' },
+        deels: { sev: 'warning',  tech: 'Maak `composer audit` blocking in plaats van warning. Configureer een CVE-allowlist alleen voor bewezen-irrelevante issues, met expliciete review-datum.', strat: 'Een audit die niet blokkeert wordt structureel genegeerd.' }
+      }
+    },
+    {
+      id: 's4', pillar: 'S', frameworks: ['NEN7510', 'ISO27001'],
+      text: 'Worden persoons- of patiëntgegevens versleuteld at-rest én at-transit volgens NEN 7510-normen?',
+      options: [
+        { v: 'nee',   label: 'Nee — plaintext in DB en/of HTTP',              score: 0 },
+        { v: 'deels', label: 'Deels — transit ja, at-rest gedeeltelijk',      score: 1 },
+        { v: 'ja',    label: 'Ja — full encryption, met key-rotation',       score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Implementeer at-rest encryption via native `sodium_crypto_secretbox` (AES-256-GCM equivalent). Audit elk databasefield met persoons- of patiëntgegevens. Voeg TLS 1.3 met HSTS toe voor alle endpoints. NEN 7510 §4 vereist aantoonbare key-rotation; documenteer rotation-schedule en key-custody.', strat: 'Bij een datalek met onversleutelde patiëntgegevens is melding aan de AP verplicht en het reputatierisico onmiddellijk.' },
+        deels: { sev: 'warning',  tech: 'Documenteer welke velden encrypted zijn en welke (nog) niet. Plan een full-coverage-sprint met meetbaar acceptatiecriterium (0 plaintext-velden voor categorie-A data).', strat: 'Gedeeltelijke encryption suggereert volledige beveiliging — een gevaarlijke schijn-zekerheid bij audit.' }
+      }
+    },
+    {
+      id: 's5', pillar: 'S', frameworks: ['ISO27001', 'NEN7510'],
+      text: 'Is er een gedocumenteerde RBAC-structuur met least-privilege als uitgangspunt?',
+      options: [
+        { v: 'nee',   label: 'Nee — geen formele rollen-structuur',           score: 0 },
+        { v: 'deels', label: 'Deels — impliciete rollen, niet getoetst',      score: 1 },
+        { v: 'ja',    label: 'Ja — RBAC formeel met periodieke review',       score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Schrijf een RBAC-specificatie voor de core applicatie: rollen, permissies, resources. Implementeer via native PHP 8 Attributes (`#[RequireRole(\'admin\')]`) i.p.v. een zware ACL-library. Voeg een nightly job toe die alle gebruikers/rollen exporteert naar een audit-log.', strat: 'Zonder RBAC is least-privilege onmogelijk te bewijzen; ISO 27001 A.9 wordt dan een onhaalbare control.' },
+        deels: { sev: 'warning',  tech: 'Documenteer de impliciete rollen-structuur en toets jaarlijks: gebruikt elke rol nog wat wordt toegekend? Verwijder verlofgangers en stale accounts via een access review.', strat: 'Impliciete rollen worden bij personeelswisselingen onbeheersbaar.' }
+      }
+    },
+    // Organisatie
+    {
+      id: 'o1', pillar: 'O', frameworks: ['ISO27001', 'NEN7510'],
+      text: 'Zijn de developers structureel getraind in Secure-by-Design en OWASP Top 10?',
+      options: [
+        { v: 'nee',   label: 'Nee — geen formele training',                   score: 0 },
+        { v: 'deels', label: 'Deels — eenmalig ergens in het verleden',       score: 1 },
+        { v: 'ja',    label: 'Ja — jaarlijks, met exit-toets',                score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Start een Numanski coachingtraject van 4 sessies: OWASP Top 10 (2025), PHP-specifieke valkuilen (SQL injection-patronen, header-injection, deserialization), en hands-on remediation in de eigen codebase. Sluit af met een meetbare exit-toets.', strat: 'Untrained engineers reproduceren bewezen valkuilen; ISO 27001 A.6.3 (awareness, education, training) is dan niet aantoonbaar.' },
+        deels: { sev: 'warning',  tech: 'Maak training jaarlijks verplicht met een meetbare exit-toets. Voeg een security-onboarding toe voor nieuwe medewerkers binnen 30 dagen.', strat: 'Eenmalige training is geen training — kennis veroudert sneller dan beleid.' }
+      }
+    },
+    {
+      id: 'o2', pillar: 'O', frameworks: ['NIS2', 'ISO27001'],
+      text: 'Wordt elke change beoordeeld via een pull request met minimaal één tweede reviewer?',
+      options: [
+        { v: 'nee',   label: 'Nee — direct pushen mag',                       score: 0 },
+        { v: 'deels', label: 'Deels — branch protection, soms gebypassed',    score: 1 },
+        { v: 'ja',    label: 'Ja — mandatory review, security-CODEOWNERS',    score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Configureer branch protection in GitHub/GitLab: minimaal 1 reviewer, status checks blocking, geen direct-push naar main. Implementeer CODEOWNERS voor security-sensitive paden (auth/, crypto/, payment/).', strat: 'Zonder peer review is iedere fout een single-point-of-failure; bij audit is dit een onmiddellijke vinding.' },
+        deels: { sev: 'warning',  tech: 'Maak review-discipline meetbaar: % merges met goedkeuring, gemiddelde tijd-tot-review. Verwijder bypass-rechten van iedereen behalve een gedocumenteerde break-glass-rol.', strat: 'Een bypass-mogelijkheid die structureel gebruikt wordt is feitelijk geen control.' }
+      }
+    },
+    {
+      id: 'o3', pillar: 'O', frameworks: ['NIS2', 'NEN7510'],
+      text: 'Krijgen alle medewerkers (niet alleen IT) jaarlijks security-awareness training?',
+      options: [
+        { v: 'nee',   label: 'Nee — alleen IT, of helemaal niet',             score: 0 },
+        { v: 'deels', label: 'Deels — IT structureel, rest sporadisch',       score: 1 },
+        { v: 'ja',    label: 'Ja — alle medewerkers, met phishing-tests',     score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Roll out een jaarlijkse awareness-training voor álle medewerkers. Onderwerpen: phishing (met live simulatie), datalek-meldroutes, social engineering, password hygiene en clean-desk. NIS2 art. 21.2.g vereist dit expliciet.', strat: 'De zwakste schakel zit zelden in IT; meestal in administratie, sales, of HR. Toezichthouders weten dit.' },
+        deels: { sev: 'warning',  tech: 'Breid uit naar alle medewerkers. Voeg quarterly phishing-simulaties toe (intern via gophish of een vergelijkbaar zelf-gehost platform) als meetinstrument.', strat: 'Sporadische training is statistisch niet onderscheidbaar van geen training.' }
+      }
+    },
+    {
+      id: 'o4', pillar: 'O', frameworks: ['NIS2'],
+      text: 'Wordt "minder code, eigen code" (software-minimalisme) actief gepromoot in code-reviews en architectuurbeslissingen?',
+      options: [
+        { v: 'nee',   label: 'Nee — "er is wel een package voor"',            score: 0 },
+        { v: 'deels', label: 'Deels — incidenteel besproken',                 score: 1 },
+        { v: 'ja',    label: 'Ja — expliciet review-criterium',               score: 2 }
+      ],
+      remediation: {
+        nee:   { sev: 'critical', tech: 'Adopteer de Numanski Code Hygiëne-richtlijn: elke nieuwe dependency vereist schriftelijke rechtvaardiging in de PR-template (Waarom deze? Welk native alternatief is overwogen? Wie is maintainer?). Faciliteer pair-programming met focus op native alternatives.', strat: 'Cultuur slaat altijd strategie; zonder culturele verankering blijft software-minimalisme een papieren beleid.' },
+        deels: { sev: 'warning',  tech: 'Maak software-minimalisme een expliciet review-criterium in elke PR. Voeg "is deze dependency strict noodzakelijk?" toe aan het PR-template als verplicht veld.', strat: 'Incidentele aandacht voor minimalisme verliest het structureel van de "snelste oplossing".' }
+      }
+    }
+  ];
+
+  const FRAMEWORK_LABEL = { NIS2: 'NIS2', ISO27001: 'ISO 27001', NEN7510: 'NEN 7510' };
+  const PILLAR_LABEL = { P: 'Processen', S: 'Systemen', O: 'Organisatie' };
+  const SEVERITY_LABEL = { critical: 'KRITIEK', warning: 'AANDACHTSPUNT' };
+
+  const STORAGE_KEY = 'numanski.compliance.v1';
+
+  // ─── State ───────────────────────────────────────────────────────
+  const state = {
+    activeFrameworks: new Set(['NIS2', 'ISO27001', 'NEN7510']),
+    answers: {}
+  };
+
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const saved = JSON.parse(raw);
+      if (Array.isArray(saved.activeFrameworks)) state.activeFrameworks = new Set(saved.activeFrameworks);
+      if (saved.answers && typeof saved.answers === 'object') state.answers = saved.answers;
+    }
+  } catch (_) { /* ignore */ }
+
+  function persist() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        activeFrameworks: [...state.activeFrameworks],
+        answers: state.answers
+      }));
+    } catch (_) { /* ignore */ }
+  }
+
+  // ─── Render ──────────────────────────────────────────────────────
+  function questionVisible(q) {
+    return q.frameworks.some(fw => state.activeFrameworks.has(fw));
+  }
+
+  function renderQuestions() {
+    ['P', 'S', 'O'].forEach(pillar => {
+      const container = document.querySelector(`.questions[data-pillar="${pillar}"]`);
+      const items = QUESTIONS.filter(q => q.pillar === pillar);
+      container.innerHTML = items.map(renderQuestion).join('');
+    });
+  }
+
+  function renderQuestion(q) {
+    const fwBadges = q.frameworks
+      .map(fw => `<span class="fw-badge" data-fw="${fw}">${FRAMEWORK_LABEL[fw]}</span>`)
+      .join('');
+
+    const options = q.options.map(opt => {
+      const id = `${q.id}-${opt.v}`;
+      const checked = state.answers[q.id] === opt.v ? 'checked' : '';
+      return `
+        <input type="radio" id="${id}" name="${q.id}" value="${opt.v}" ${checked}>
+        <label for="${id}"><span class="opt-marker" aria-hidden="true"></span>${escapeHtml(opt.label)}</label>
+      `;
+    }).join('');
+
+    const visible = questionVisible(q) ? '' : 'hidden';
+    return `
+      <article class="question ${visible}" data-id="${q.id}" data-frameworks="${q.frameworks.join(' ')}">
+        <div class="q-header">
+          <h3>${escapeHtml(q.text)}</h3>
+          <div class="fw-badges">${fwBadges}</div>
+        </div>
+        <fieldset class="segmented">
+          <legend class="vh">Antwoord op vraag ${q.id}</legend>
+          ${options}
+        </fieldset>
+      </article>
+    `;
+  }
+
+  function applyVisibility() {
+    QUESTIONS.forEach(q => {
+      const el = document.querySelector(`.question[data-id="${q.id}"]`);
+      if (!el) return;
+      el.classList.toggle('hidden', !questionVisible(q));
+    });
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const visible = QUESTIONS.filter(questionVisible);
+    const answered = visible.filter(q => state.answers[q.id]).length;
+    const total = visible.length;
+    const pct = total ? (answered / total) * 100 : 0;
+
+    document.getElementById('progress-ratio').textContent = `${answered} / ${total}`;
+    document.getElementById('progress-fill').style.width = `${pct}%`;
+    document.getElementById('generate').disabled = answered === 0;
+
+    ['P', 'S', 'O'].forEach(pillar => {
+      const pQs = visible.filter(q => q.pillar === pillar);
+      const pA = pQs.filter(q => state.answers[q.id]).length;
+      const el = document.querySelector(`[data-pillar-score="${pillar}"]`);
+      if (el) el.textContent = `${pA} / ${pQs.length}`;
+    });
+  }
+
+  // ─── Events ──────────────────────────────────────────────────────
+  document.querySelectorAll('.chip').forEach(chip => {
+    const fw = chip.dataset.fw;
+    chip.setAttribute('aria-pressed', state.activeFrameworks.has(fw) ? 'true' : 'false');
+    chip.addEventListener('click', () => {
+      if (state.activeFrameworks.has(fw)) {
+        state.activeFrameworks.delete(fw);
+      } else {
+        state.activeFrameworks.add(fw);
+      }
+      chip.setAttribute('aria-pressed', state.activeFrameworks.has(fw) ? 'true' : 'false');
+      applyVisibility();
+      persist();
+    });
+  });
+
+  document.querySelector('main').addEventListener('change', (e) => {
+    const t = e.target;
+    if (t.matches('input[type="radio"]')) {
+      state.answers[t.name] = t.value;
+      persist();
+      updateProgress();
+    }
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    if (!confirm('Sessie volledig resetten? Antwoorden en framework-keuze worden gewist.')) return;
+    state.answers = {};
+    state.activeFrameworks = new Set(['NIS2', 'ISO27001', 'NEN7510']);
+    persist();
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', 'true'));
+    renderQuestions();
+    applyVisibility();
+    document.getElementById('output-section').hidden = true;
+    document.getElementById('output-md').value = '';
+  });
+
+  document.getElementById('generate').addEventListener('click', () => {
+    const md = buildReport();
+    const out = document.getElementById('output-md');
+    out.value = md;
+    document.getElementById('output-section').hidden = false;
+    document.getElementById('output-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('copy').addEventListener('click', async () => {
+    const md = document.getElementById('output-md').value;
+    if (!md) return;
+    try {
+      await navigator.clipboard.writeText(md);
+      const toast = document.getElementById('toast');
+      toast.dataset.show = 'true';
+      setTimeout(() => { toast.dataset.show = 'false'; }, 1600);
+    } catch (_) {
+      document.getElementById('output-md').select();
+    }
+  });
+
+  document.getElementById('download').addEventListener('click', () => {
+    const md = document.getElementById('output-md').value;
+    if (!md) return;
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `numanski-compliance-scan-${isoDate()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ─── Report builder ──────────────────────────────────────────────
+  function buildReport() {
+    const date = isoDate();
+    const frameworks = [...state.activeFrameworks].map(fw => FRAMEWORK_LABEL[fw]).join(' · ');
+    const visible = QUESTIONS.filter(questionVisible);
+
+    const totalScore = visible.reduce((sum, q) => {
+      const a = state.answers[q.id];
+      if (!a) return sum;
+      const opt = q.options.find(o => o.v === a);
+      return sum + (opt ? opt.score : 0);
+    }, 0);
+    const maxScore = visible.reduce((sum, q) => sum + Math.max(...q.options.map(o => o.score)), 0);
+    const pct = maxScore ? Math.round((totalScore / maxScore) * 100) : 0;
+    const grade = pct >= 80 ? 'Robuust' : pct >= 60 ? 'Werkbaar — formaliseren' : pct >= 40 ? 'Risicovol — sanering nodig' : 'Kritiek — onmiddellijke actie';
+
+    const lines = [];
+    lines.push('# Numanski Compliance & Keten Scan — Strategisch Actieplan');
+    lines.push('');
+    lines.push(`> _Audit gegenereerd op ${date} · Engine v1 · Zero-Dependency_`);
+    lines.push('');
+    lines.push('## Scope');
+    lines.push('');
+    lines.push(`- **Frameworks in scope:** ${frameworks || '—'}`);
+    lines.push(`- **Methodiek:** PSO (Processen · Systemen · Organisatie)`);
+    lines.push(`- **Vragen beoordeeld:** ${visible.filter(q => state.answers[q.id]).length} van ${visible.length}`);
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+    lines.push('## Executive Summary');
+    lines.push('');
+    lines.push(`**Overall Compliance Index:** ${totalScore} / ${maxScore} (${pct}%) — _${grade}_`);
+    lines.push('');
+
+    // Per-pillar summary
+    lines.push('| Pijler | Score | Status |');
+    lines.push('|---|---|---|');
+    ['P', 'S', 'O'].forEach(pillar => {
+      const pQs = visible.filter(q => q.pillar === pillar);
+      const pScore = pQs.reduce((s, q) => {
+        const a = state.answers[q.id];
+        if (!a) return s;
+        const opt = q.options.find(o => o.v === a);
+        return s + (opt ? opt.score : 0);
+      }, 0);
+      const pMax = pQs.reduce((s, q) => s + Math.max(...q.options.map(o => o.score)), 0);
+      const pPct = pMax ? Math.round((pScore / pMax) * 100) : 0;
+      const stat = pPct >= 80 ? 'Robuust' : pPct >= 60 ? 'Formaliseren' : pPct >= 40 ? 'Saneren' : 'Kritiek';
+      lines.push(`| **${PILLAR_LABEL[pillar]} (${pillar})** | ${pScore} / ${pMax} (${pPct}%) | ${stat} |`);
+    });
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+
+    // Status analyse per pillar
+    ['P', 'S', 'O'].forEach(pillar => {
+      const pQs = visible.filter(q => q.pillar === pillar);
+      if (!pQs.length) return;
+      lines.push(`## ${pillar} — ${PILLAR_LABEL[pillar]}`);
+      lines.push('');
+      pQs.forEach(q => {
+        const a = state.answers[q.id];
+        const opt = a ? q.options.find(o => o.v === a) : null;
+        const fwTag = q.frameworks.map(f => FRAMEWORK_LABEL[f]).join(', ');
+        lines.push(`### ${q.id.toUpperCase()} · ${q.text}`);
+        lines.push('');
+        lines.push(`- **Frameworks:** ${fwTag}`);
+        lines.push(`- **Antwoord:** ${opt ? opt.label : '_(niet beantwoord)_'}`);
+        if (a && q.remediation && q.remediation[a]) {
+          const rem = q.remediation[a];
+          lines.push(`- **Status:** \`${SEVERITY_LABEL[rem.sev]}\``);
+          lines.push('');
+          lines.push(`**Technische remediation:** ${rem.tech}`);
+          lines.push('');
+          lines.push(`**Strategische context:** ${rem.strat}`);
+        } else if (a) {
+          lines.push(`- **Status:** \`IN ORDE\``);
+          lines.push('');
+          lines.push('_Behoud het huidige niveau via periodieke hercontrole en monitoring._');
+        }
+        lines.push('');
+      });
+      lines.push('---');
+      lines.push('');
+    });
+
+    // Prioritized roadmap
+    const critical = [];
+    const warnings = [];
+    visible.forEach(q => {
+      const a = state.answers[q.id];
+      if (!a || !q.remediation || !q.remediation[a]) return;
+      const rem = q.remediation[a];
+      const entry = { q, rem };
+      if (rem.sev === 'critical') critical.push(entry);
+      else if (rem.sev === 'warning') warnings.push(entry);
+    });
+
+    lines.push('## Geprioriteerde Roadmap');
+    lines.push('');
+    if (critical.length === 0 && warnings.length === 0) {
+      lines.push('_Geen kritieke of aandachtspunt-bevindingen op basis van de huidige antwoorden. Aanbevolen: jaarlijkse hercontrole._');
+    } else {
+      if (critical.length) {
+        lines.push('### 🔴 Kritiek — Onmiddellijke actie (≤30 dagen)');
+        lines.push('');
+        critical.forEach(({ q, rem }, i) => {
+          lines.push(`${i + 1}. **${q.id.toUpperCase()}** — ${q.text}`);
+          lines.push(`   - Actie: ${rem.tech}`);
+        });
+        lines.push('');
+      }
+      if (warnings.length) {
+        lines.push('### 🟡 Aandachtspunten — Formaliseren (≤90 dagen)');
+        lines.push('');
+        warnings.forEach(({ q, rem }, i) => {
+          lines.push(`${i + 1}. **${q.id.toUpperCase()}** — ${q.text}`);
+          lines.push(`   - Actie: ${rem.tech}`);
+        });
+        lines.push('');
+      }
+    }
+
+    lines.push('---');
+    lines.push('');
+    lines.push('## Numanski Vervolgstappen');
+    lines.push('');
+    if (critical.length >= 3) {
+      lines.push('**Aanbevolen traject: Track 1 — Interim IT-Management (3–6 maanden)**');
+      lines.push('');
+      lines.push('Het profiel toont meerdere kritieke bevindingen die strategische sturing op CTO/CSO-niveau vereisen, gecombineerd met operationele coaching. Een interim-functionaris brengt rust, structuur en aantoonbare governance binnen één kwartaal.');
+    } else if (critical.length >= 1 || warnings.length >= 4) {
+      lines.push('**Aanbevolen traject: Track 2 — Code & Keten Scan (fixed-price, 2–4 weken)**');
+      lines.push('');
+      lines.push('Het profiel rechtvaardigt een doelgerichte deep-dive in de belangrijkste software-applicatie. De Code & Keten Scan levert een concreet remediation-plan met CVE-mapping, dependency-saneringsadvies en directie-rapport.');
+    } else {
+      lines.push('**Aanbevolen: jaarlijkse Quick Scan + Numanski-monitoring**');
+      lines.push('');
+      lines.push('Het profiel is werkbaar. Aanbevolen is een lichte jaarlijkse hercontrole en het opzetten van een KPI-dashboard dat dependency-hygiene en patch-SLA\'s structureel meetbaar maakt.');
+    }
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+    lines.push('**Sparsessie inplannen:** [marco@numanski.nl](mailto:marco@numanski.nl)  ');
+    lines.push('**Methodiek:** PSO · Software-Minimalisme · Digitale Autonomie  ');
+    lines.push(`**Rapport-versie:** ${date} · Numanski Audit Engine v1`);
+
+    return lines.join('\n');
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────
+  function escapeHtml(s) {
+    return String(s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function isoDate() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  // ─── Init ────────────────────────────────────────────────────────
+  document.getElementById('session-date').textContent = new Date().toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('footer-year').textContent = String(new Date().getFullYear());
+  renderQuestions();
+  applyVisibility();
+})();
+</script>
+
+</body>
+</html>
