@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <meta name="theme-color" content="#ffffff">
 <meta name="description" content="Numanski — Digitale autonomie, software-minimalisme en bedrijfskritische security-engineering. Interim IT-management en de Code & Keten Scan, gefundeerd op 25+ jaar IT-ervaring.">
-<meta name="author" content="Marco Numanski">
+<meta name="author" content="Marco Neumann">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://numanski.nl/">
 
@@ -173,9 +173,9 @@
     color: var(--fg);
 
     & .mark {
-      width: 44px;
-      height: 44px;
-      flex: 0 0 44px;
+      width: 100px;
+      height: 100px;
+      flex: 0 0 100px;
     }
 
     & .mark .g-light { fill: var(--brand-sage); }
@@ -343,6 +343,44 @@
   }
 
   /* ─── Threats ──────────────────────────────────────── */
+  .threat-feature {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .threat-hero {
+    margin: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--bg-elev);
+    display: flex;
+
+    & img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      aspect-ratio: 1024 / 559;
+    }
+
+    @media (max-width: 720px) {
+      & img { aspect-ratio: 1024 / 559; height: auto; }
+    }
+  }
+
+  .threat-feature .threat-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
   .threats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1117,24 +1155,7 @@
 <header class="site-header">
   <div class="container">
     <a class="brand" href="#top" aria-label="Numanski — Home">
-      <svg class="mark" viewBox="95 65 285 320" role="img" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-        <rect x="110" y="140" width="55" height="55" rx="12" class="g-light"/>
-        <rect x="110" y="200" width="55" height="55" rx="12" class="g-light"/>
-        <rect x="110" y="260" width="55" height="55" rx="12" class="g-dark"/>
-        <rect x="175" y="200" width="55" height="55" rx="12" class="g-dark"/>
-        <rect x="175" y="260" width="55" height="55" rx="12" class="g-light"/>
-        <rect x="175" y="320" width="55" height="55" rx="12" class="g-dark"/>
-        <rect x="240" y="80"  width="55" height="55" rx="12" class="g-green"/>
-        <rect x="240" y="140" width="55" height="55" rx="12" class="g-dark"/>
-        <rect x="240" y="200" width="55" height="55" rx="12" class="g-green"/>
-        <rect x="240" y="260" width="55" height="55" rx="12" class="g-dark"/>
-        <rect x="240" y="320" width="55" height="55" rx="12" class="g-green"/>
-        <rect x="305" y="80"  width="55" height="55" rx="12" class="g-green"/>
-        <rect x="305" y="200" width="55" height="55" rx="12" class="g-green"/>
-        <rect x="305" y="260" width="55" height="55" rx="12" class="g-green"/>
-        <rect x="305" y="320" width="55" height="55" rx="12" class="g-green"/>
-      </svg>
-      <span class="wordmark"><b>numanski</b></span>
+      <img class="mark" src="assets/img/logo-numanski.png" alt="" width="100" height="100" decoding="async">
     </a>
     <nav class="nav" aria-label="Hoofdnavigatie">
       <a href="#dreiging">Dreiging</a>
@@ -1210,6 +1231,15 @@
           <h3>Geen zicht op de keten.</h3>
           <p>De gemiddelde organisatie weet niet welke libraries draaien, wie ze onderhoudt, of wanneer ze voor het laatst zijn geaudit. Governance ontbreekt op directieniveau.</p>
         </article>
+      </div>
+
+      <div class="threat-feature">
+        <figure class="threat-hero">
+          <img src="assets/img/de-pijnpunten-numanski.jpeg"
+               alt="Overweldigde IT-manager met handen tegen zijn slapen, omringd door meerdere monitors met code, gele plakbriefjes en een whiteboard vol roadmaps — een visualisatie van software-overload."
+               width="1024" height="559"
+               loading="lazy" decoding="async">
+        </figure>
 
         <article class="threat-card" role="listitem">
           <span class="tag">Regelgeving</span>
@@ -1280,7 +1310,7 @@
             streng beveiligde, geïsoleerde omgeving met een strikte <em>Zero-Data-Retention</em> policy.
             Uw broncode en bedrijfsgeheimen worden <strong>nooit gedeeld met publieke cloud-modellen</strong>
             en worden <strong>nooit gebruikt voor training</strong>. De AI is onze hefboom; de 25+ jaar
-            praktijkervaring van Marco Numanski is uw kwaliteitsgarantie.
+            praktijkervaring van Marco Neumann is uw kwaliteitsgarantie.
           </p>
         </aside>
       </div>
@@ -1388,7 +1418,7 @@
               <strong>Het volledige actieplan is onderweg.</strong>
               Een op uw situatie toegespitst Markdown-rapport — met dekking voor
               <strong>NIS2</strong>, <strong>ISO 27001</strong> en <strong>NEN 7510</strong> —
-              wordt nu naar uw inbox gestuurd. Marco Numanski neemt
+              wordt nu naar uw inbox gestuurd. Marco Neumann neemt
               <strong>binnen 24 uur</strong> persoonlijk contact op voor een strategische review
               zonder verkoopdruk.
             </p>
@@ -1409,19 +1439,19 @@
     <div class="container">
       <header class="section-head">
         <span class="eyebrow">De Autoriteit</span>
-        <h2 id="about-title">Over Marco Numanski.</h2>
+        <h2 id="about-title">Over Marco Neumann.</h2>
       </header>
 
       <div class="about-grid">
         <figure class="portrait">
           <img
             src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f3f3ee'/%3E%3Cstop offset='1' stop-color='%23dce6b5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='500' fill='url(%23g)'/%3E%3Ccircle cx='200' cy='200' r='78' fill='%236E7072'/%3E%3Cpath d='M80 470c0-66 54-120 120-120s120 54 120 120' fill='%236E7072'/%3E%3C/svg%3E"
-            alt="Portret van Marco Numanski"
+            alt="Portret van Marco Neumann"
             width="280"
             height="350"
             loading="eager"
             decoding="async">
-          <figcaption>Marco Numanski — Founder</figcaption>
+          <figcaption>Marco Neumann — Founder</figcaption>
         </figure>
 
         <div class="about-body">
