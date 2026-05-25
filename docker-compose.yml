@@ -1,0 +1,147 @@
+# Numanski — gehardende compose-stack.
+# Twee containers, twee networks, één secret-file.
+#
+# Run:    docker compose up -d
+# Logs:   docker compose logs -f
+# Update: docker compose pull && docker compose up -d
+#
+# Voor je start:
+#   cp .env.example .env       && chmod 600 .env       && $EDITOR .env
+#   mkdir -p secrets && touch secrets/smtp_pass
+#   chmod 700 secrets && chmod 600 secrets/smtp_pass
+#   $EDITOR secrets/smtp_pass  # plak hier het Google App Password
+#
+services:
+
+  # ─────────────────────────────────────────────────────────────────
+  # NGINX  — front, op proxy-network (achter NPM) én op private bridge
+  # ─────────────────────────────────────────────────────────────────
+  webserver:
+    image: nginx:alpine
+    container_name: html-website
+    restart: unless-stopped
+
+    volumes:
+      - ./html:/usr/share/nginx/html:ro
+      - ./api:/var/www/api:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    # ─── Filesystem-hardening ──────────────────────────────────
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:size=32m,mode=755
+      - /var/run:size=4m,mode=755
+      - /tmp:size=8m,mode=1777
+
+    # ─── Kernel-cap-hardening ──────────────────────────────────
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN              # nginx logfile ownership
+      - SETUID             # workers droppen naar nginx-user
+      - SETGID
+      - NET_BIND_SERVICE   # listen op :80
+      - DAC_OVERRIDE       # toegang tot logs / cache
+
+    # ─── Resource-caps (DoS-guard) ─────────────────────────────
+    mem_limit: 128m
+    pids_limit: 128
+    cpus: 0.50
+
+    # ─── Logging (begrenst log-disk-spam) ──────────────────────
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # ─── Healthcheck ───────────────────────────────────────────
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://127.0.0.1/healthz"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    networks:
+      - proxy-network
+      - internal
+    depends_on:
+      php:
+        condition: service_started
+
+  # ─────────────────────────────────────────────────────────────────
+  # PHP-FPM  — alleen op private bridge, niet bereikbaar van buiten
+  # ─────────────────────────────────────────────────────────────────
+  php:
+    image: php:8.3-fpm-alpine
+    container_name: html-php
+    restart: unless-stopped
+
+    volumes:
+      - ./api:/var/www/api:ro
+      - ./php-fpm.conf:/usr/local/etc/php-fpm.d/zz-numanski.conf:ro
+      - ./php.ini:/usr/local/etc/php/conf.d/zz-numanski.ini:ro
+
+    environment:
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: "587"
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS_FILE: /run/secrets/smtp_pass    # secret als file, niet env
+      MAIL_TO: ${MAIL_TO}
+      ALLOWED_ORIGIN: ${ALLOWED_ORIGIN}
+
+    secrets:
+      - smtp_pass
+
+    # ─── Filesystem-hardening ──────────────────────────────────
+    read_only: true
+    tmpfs:
+      - /var/run:size=4m,mode=755
+      - /tmp:size=16m,mode=1777            # rate-limit-files leven hier
+
+    # ─── Kernel-cap-hardening ──────────────────────────────────
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+
+    # ─── Resource-caps ─────────────────────────────────────────
+    mem_limit: 128m
+    pids_limit: 64
+    cpus: 0.50
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "9000"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+    networks:
+      - internal
+
+# ─── Networks ────────────────────────────────────────────────────────
+networks:
+  proxy-network:           # extern, NPM routeert hier naartoe
+    external: true
+    name: proxy-network
+  internal:                # private bridge tussen webserver ↔ php
+    driver: bridge
+
+# ─── Secrets (mount as file, niet als env) ───────────────────────────
+secrets:
+  smtp_pass:
+    file: ./secrets/smtp_pass

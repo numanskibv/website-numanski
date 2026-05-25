@@ -1139,6 +1139,177 @@
     & svg { width: 18px; height: 18px; stroke: currentColor; }
   }
 
+  /* ─── Honeypots (visueel weggestopt, niet display:none zodat bots ze pakken) ─── */
+  .qs-honeypot,
+  .modal-honeypot {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ─── Contact Modal ───────────────────────────────── */
+  .modal {
+    position: fixed; inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: clamp(1rem, 4vw, 2rem);
+    background: rgba(15, 16, 17, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+
+    &[data-open="true"] { display: flex; }
+  }
+
+  .modal-card {
+    --m-bg:        #161616;
+    --m-bg-elev:   #1f1f1f;
+    --m-fg:        #ffffff;
+    --m-fg-muted:  rgba(245,245,243,0.74);
+    --m-fg-dim:    rgba(245,245,243,0.5);
+    --m-border:    #2a2a2a;
+    --m-border-str:#3a3a3a;
+
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    background: var(--m-bg);
+    color: var(--m-fg);
+    border: 1px solid var(--m-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+
+    &::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--brand-sage), var(--brand-lime), var(--brand-lime-deep));
+    }
+  }
+
+  .modal-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem 0.5rem;
+
+    & h2 { font-size: 1.25rem; color: var(--m-fg); letter-spacing: -0.02em; }
+    & p  { font-size: 0.92rem; color: var(--m-fg-muted); margin-top: 0.4rem; }
+  }
+
+  .modal-close {
+    flex: 0 0 32px;
+    width: 32px; height: 32px;
+    display: grid; place-items: center;
+    background: transparent;
+    color: var(--m-fg-muted);
+    border: 1px solid var(--m-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font: inherit; font-size: 1.1rem; line-height: 1;
+    transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+
+    &:hover, &:focus-visible {
+      color: var(--m-fg);
+      border-color: var(--m-border-str);
+      background: var(--m-bg-elev);
+    }
+  }
+
+  .modal-body {
+    padding: 1rem 1.75rem 1.75rem;
+  }
+
+  .modal-form {
+    display: grid; gap: 1rem;
+
+    & label {
+      display: grid; gap: 0.35rem;
+      font-size: 0.9rem; font-weight: 500;
+      color: var(--m-fg);
+    }
+
+    & input, & textarea {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      font: inherit; font-size: 0.95rem;
+      color: var(--m-fg);
+      background: var(--m-bg-elev);
+      border: 1px solid var(--m-border);
+      border-radius: var(--radius);
+      transition: border-color .15s ease, background-color .15s ease;
+
+      &::placeholder { color: var(--m-fg-dim); }
+      &:hover  { border-color: var(--m-border-str); }
+      &:focus-visible {
+        outline: none;
+        border-color: var(--brand-lime);
+        background: #232323;
+      }
+      &:invalid:not(:placeholder-shown) { border-color: #e0664a; }
+    }
+
+    & textarea { resize: vertical; min-height: 110px; line-height: 1.5; }
+  }
+
+  .modal-submit-row {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 0.75rem 1.25rem;
+    margin-top: 0.25rem;
+
+    & .btn-primary {
+      background: var(--brand-lime); color: #1f2022; border-color: var(--brand-lime);
+      &:hover { background: var(--brand-lime-deep); border-color: var(--brand-lime-deep); }
+      &[disabled] { opacity: 0.6; cursor: progress; transform: none; }
+    }
+  }
+
+  .modal-reassurance {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 0.74rem;
+    color: var(--m-fg-dim); letter-spacing: 0.04em;
+
+    &::before {
+      content: ""; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--brand-lime);
+    }
+  }
+
+  .modal-success {
+    display: none;
+    padding: 1.5rem 0 0.25rem;
+    text-align: center;
+
+    & .modal-success-icon {
+      display: inline-grid; place-items: center;
+      width: 48px; height: 48px;
+      margin: 0 auto 0.85rem;
+      border-radius: 50%;
+      background: color-mix(in oklab, var(--brand-lime) 18%, transparent);
+      color: var(--brand-lime);
+      font-size: 1.4rem; font-weight: 700;
+    }
+
+    & h3 {
+      font-size: 1.1rem; color: var(--m-fg);
+      margin-bottom: 0.4rem;
+    }
+
+    & p {
+      color: var(--m-fg-muted);
+      font-size: 0.94rem;
+      max-width: 38ch; margin: 0 auto;
+    }
+  }
+
+  .modal[data-state="sent"] .modal-form    { display: none; }
+  .modal[data-state="sent"] .modal-success { display: block; }
+
+  /* Voorkomt scrollen onder de modal */
+  body.modal-open { overflow: hidden; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       transition: none !important;
@@ -1393,6 +1564,10 @@
                    inputmode="email"
                    required
                    aria-describedby="qs-email-help">
+
+            <!-- Honeypot: bots vullen vaak het eerste tekstveld in -->
+            <input type="text" name="website" tabindex="-1" autocomplete="off"
+                   class="qs-honeypot" aria-hidden="true">
           </div>
 
           <div class="qs-submit-row">
@@ -1552,15 +1727,70 @@
           Eén kort, scherp gesprek. We kijken samen waar de grootste keten- en bloat-risico's
           zitten — en of er een traject is dat hout snijdt. Geen formulieren, geen funnels.
         </p>
-        <a class="btn btn-primary" href="mailto:marco@numanski.nl?subject=Sparsessie%20inplannen%20%E2%80%94%20Numanski" aria-label="Sparsessie inplannen via e-mail">
+        <button type="button" class="btn btn-primary" data-modal-open="contact-modal" aria-haspopup="dialog">
           Sparsessie inplannen →
-        </a>
+        </button>
         <p style="font-size:0.88rem;color:var(--fg-dim);margin-top:0.5rem;">
           Of mail direct: <a href="mailto:marco@numanski.nl" style="color:var(--fg);text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;">marco@numanski.nl</a>
         </p>
       </div>
     </div>
   </section>
+
+  <!-- ── Contact Modal ─────────────────────────────── -->
+  <div class="modal" id="contact-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-card" role="document">
+      <header class="modal-head">
+        <div>
+          <h2 id="modal-title">Sparsessie inplannen</h2>
+          <p>Drie velden. Eén kort gesprek. Geen formulieren-na-formulieren.</p>
+        </div>
+        <button type="button" class="modal-close" data-modal-close
+                aria-label="Sluiten">&times;</button>
+      </header>
+
+      <div class="modal-body">
+        <form class="modal-form" id="contact-form" novalidate>
+          <label>
+            Naam
+            <input type="text" name="name" required
+                   maxlength="100" autocomplete="name"
+                   placeholder="Voor- en achternaam">
+          </label>
+
+          <label>
+            Zakelijk e-mailadres
+            <input type="email" name="email" required
+                   maxlength="254" autocomplete="email" inputmode="email"
+                   placeholder="naam@bedrijf.nl">
+          </label>
+
+          <label>
+            Bericht
+            <textarea name="message" required maxlength="4000" rows="4"
+                      placeholder="Korte schets van je vraag of context."></textarea>
+          </label>
+
+          <!-- Honeypot -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off"
+                 class="modal-honeypot" aria-hidden="true">
+
+          <div class="modal-submit-row">
+            <button type="submit" class="btn btn-primary" id="contact-submit">
+              Verzenden →
+            </button>
+            <span class="modal-reassurance">Direct in mijn inbox · geen funnel</span>
+          </div>
+        </form>
+
+        <div class="modal-success" id="contact-success" aria-live="polite">
+          <div class="modal-success-icon" aria-hidden="true">✓</div>
+          <h3>Bedankt — je bericht is verstuurd.</h3>
+          <p>Ik neem binnen 24 uur persoonlijk contact op. Geen tussenpersonen, geen verkooppraat.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </main>
 
@@ -1638,10 +1868,11 @@
 
     const fd = new FormData(form);
     const answers = {
-      p:     fd.get('qs-p'),
-      s:     fd.get('qs-s'),
-      o:     fd.get('qs-o'),
-      email: (fd.get('qs-email') || '').trim()
+      p:       fd.get('qs-p'),
+      s:       fd.get('qs-s'),
+      o:       fd.get('qs-o'),
+      email:   (fd.get('qs-email') || '').trim(),
+      website: (fd.get('website')  || '').trim()   // honeypot
     };
 
     const score = (SCORES['qs-p'][answers.p] ?? 0)
@@ -1650,34 +1881,22 @@
     const level = classify(score);
     const t = TEASERS[level];
 
-    /* ─── Lead-capture WEBHOOK (placeholder) ────────────────────
-     *
-     * Hook hier het endpoint aan dat de lead opvangt. De UI blokkeert
-     * NIET op het resultaat — de bezoeker ziet altijd direct hun teaser.
-     *
-     * Voorbeeld met Formspree:
-     *
-     *   fetch('https://formspree.io/f/JOUW-ID', {
-     *     method: 'POST',
-     *     headers: {
-     *       'Content-Type': 'application/json',
-     *       'Accept': 'application/json'
-     *     },
-     *     body: JSON.stringify({
-     *       email:       answers.email,
-     *       answer_p:    answers.p,
-     *       answer_s:    answers.s,
-     *       answer_o:    answers.o,
-     *       score:       score,
-     *       risk_level:  level,
-     *       generated_at: new Date().toISOString(),
-     *       source:      'numanski.nl/#quickscan'
-     *     })
-     *   }).catch((err) => console.error('Lead capture failed:', err));
-     *
-     * Alternatieven: Netlify Forms (action="/" + name attr), Basin,
-     * of een eigen PHP-endpoint conform de Numanski Zero-Dependency lijn.
-     * ───────────────────────────────────────────────────────── */
+    // Lead-capture: fire-and-forget naar eigen endpoint.
+    // De UI blokkeert NIET — bezoeker ziet meteen z'n teaser.
+    fetch('/api/send-mail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:    'quickscan',
+        email:   answers.email,
+        p:       answers.p,
+        s:       answers.s,
+        o:       answers.o,
+        score:   score,
+        level:   level,
+        website: answers.website
+      })
+    }).catch(() => { /* stil falen — geen UX-impact */ });
 
     // UI update + smooth swap
     teaser.dataset.level = level;
@@ -1691,6 +1910,97 @@
       requestAnimationFrame(() => result.classList.add('is-entered'));
       result.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 220);
+  });
+})();
+</script>
+
+<script>
+/* ─────────────────────────────────────────────────────────────────
+ * Contact Modal — open/close + form submit naar /api/send-mail
+ *   - Geen libraries, vanilla JS
+ *   - Focus management: opent op eerste veld, herstelt focus op trigger
+ *   - ESC en backdrop-klik sluiten
+ * ─────────────────────────────────────────────────────────────── */
+(() => {
+  'use strict';
+
+  const modal   = document.getElementById('contact-modal');
+  const form    = document.getElementById('contact-form');
+  const submit  = document.getElementById('contact-submit');
+  if (!modal || !form || !submit) return;
+
+  let lastTrigger = null;
+
+  function open(trigger) {
+    lastTrigger = trigger || null;
+    modal.hidden = false;
+    modal.dataset.open  = 'true';
+    modal.dataset.state = 'form';
+    document.body.classList.add('modal-open');
+    // Reset state als de gebruiker hem opnieuw opent
+    form.reset();
+    form.style.display = '';
+    const first = form.querySelector('input[name="name"]');
+    if (first) requestAnimationFrame(() => first.focus());
+  }
+
+  function close() {
+    modal.hidden = true;
+    modal.dataset.open = 'false';
+    document.body.classList.remove('modal-open');
+    if (lastTrigger) lastTrigger.focus();
+  }
+
+  // Openers
+  document.querySelectorAll('[data-modal-open="contact-modal"]').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.preventDefault(); open(btn); });
+  });
+
+  // Sluiters (X-knop + klik op backdrop)
+  modal.addEventListener('click', (e) => {
+    const t = e.target;
+    if (t === modal || (t instanceof HTMLElement && t.hasAttribute('data-modal-close'))) {
+      close();
+    }
+  });
+
+  // ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.dataset.open === 'true') { close(); }
+  });
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    const fd = new FormData(form);
+    const payload = {
+      type:    'contact',
+      name:    (fd.get('name')    || '').toString().trim(),
+      email:   (fd.get('email')   || '').toString().trim(),
+      message: (fd.get('message') || '').toString().trim(),
+      website: (fd.get('website') || '').toString().trim()   // honeypot
+    };
+
+    submit.disabled = true;
+    const originalLabel = submit.textContent;
+    submit.textContent  = 'Versturen…';
+
+    try {
+      await fetch('/api/send-mail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      // Endpoint geeft altijd 200 (geen oracle) — we tonen altijd succes.
+      modal.dataset.state = 'sent';
+    } catch (_err) {
+      // Netwerkfout: laat user opnieuw proberen
+      submit.disabled = false;
+      submit.textContent = originalLabel;
+      alert('Verbinding mislukte. Probeer het nog eens of mail direct naar marco@numanski.nl.');
+    }
   });
 })();
 </script>

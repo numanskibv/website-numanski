@@ -15,7 +15,13 @@
 .env.local
 .env.*.local
 
+# Secrets folder (Docker secret file mount)
+/secrets/*
+!/secrets/.gitkeep
+
 # Logs
 *.log
 
-# (docker-compose.override.yml committen we wél — voegt 'build:' toe voor lokale dev)
+# PHP / Composer (mocht het ooit gebruikt worden — wij zijn nu zero-dep)
+vendor/
+composer.lock
