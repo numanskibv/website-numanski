@@ -934,6 +934,173 @@
     & b { color: var(--qs-fg); font-weight: 600; }
   }
 
+  /* ─── Compliance Engine (AI Section) ──────────────── */
+  .ai-engine {
+    --eng-bg:         #161616;
+    --eng-bg-elev:    #1f1f1f;
+    --eng-fg:         #ffffff;
+    --eng-fg-muted:   rgba(245,245,243,0.74);
+    --eng-fg-dim:     rgba(245,245,243,0.5);
+    --eng-border:     #2a2a2a;
+    --eng-border-str: #3a3a3a;
+
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4rem, 8vw, 6.5rem);
+    background: var(--bg-invert);
+    color: var(--eng-fg);
+    border-bottom: 1px solid var(--border);
+
+    &::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(50% 40% at 100% 0%,
+          color-mix(in oklab, var(--brand-lime) 10%, transparent), transparent 60%),
+        radial-gradient(40% 50% at 0% 100%,
+          color-mix(in oklab, var(--brand-sage) 8%, transparent), transparent 60%);
+      pointer-events: none;
+    }
+
+    & .container { position: relative; z-index: 1; }
+    & .eyebrow { color: var(--eng-fg-muted); &::before { background: var(--brand-lime); } }
+  }
+
+  .engine-head {
+    display: grid; gap: 0.75rem;
+    max-width: 70ch;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+
+    & h2 { color: var(--eng-fg); }
+    & h2 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--brand-sage), var(--brand-lime));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    & .engine-sub {
+      font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+      color: var(--eng-fg-muted);
+      max-width: 58ch;
+      font-style: italic;
+    }
+  }
+
+  .engine-body {
+    display: grid;
+    gap: 1.5rem;
+
+    & > p { color: var(--eng-fg-muted); max-width: 68ch; }
+    & > p strong { color: var(--eng-fg); font-weight: 600; }
+  }
+
+  .engine-pillars {
+    list-style: none;
+    padding: 0;
+    margin: 0.25rem 0 0.5rem;
+    display: grid;
+    gap: 1px;
+    background: var(--eng-border);
+    border: 1px solid var(--eng-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+
+    & > li {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 1.1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--eng-bg);
+      align-items: start;
+      transition: background-color .15s ease;
+    }
+
+    & > li:hover { background: var(--eng-bg-elev); }
+
+    & h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.05rem;
+      color: var(--eng-fg);
+      letter-spacing: -0.015em;
+    }
+
+    & p {
+      margin: 0;
+      color: var(--eng-fg-muted);
+      font-size: 0.97rem;
+      max-width: none;
+    }
+  }
+
+  .engine-pillar-tag {
+    display: inline-grid; place-items: center;
+    width: 36px; height: 36px;
+    border-radius: 5px;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 0.95rem;
+    background: var(--brand-lime);
+    color: #1f2022;
+
+    .engine-pillars > li:nth-child(2) & { background: var(--brand-gray); color: #ffffff; }
+    .engine-pillars > li:nth-child(3) & { background: var(--brand-sage); color: #1f2022; }
+  }
+
+  .engine-guarantee {
+    margin-top: 0.75rem;
+    padding: 1.4rem 1.6rem;
+    background: color-mix(in oklab, var(--brand-lime) 8%, var(--eng-bg));
+    border: 1px solid var(--eng-border-str);
+    border-left: 4px solid var(--brand-lime);
+    border-radius: var(--radius-lg);
+    display: grid; gap: 0.55rem;
+
+    & h3 {
+      margin: 0;
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      font-size: 1.05rem; color: var(--eng-fg);
+      letter-spacing: -0.015em;
+    }
+
+    & p {
+      margin: 0;
+      color: var(--eng-fg-muted);
+      max-width: 66ch;
+      font-size: 0.97rem;
+    }
+    & p strong { color: var(--eng-fg); font-weight: 600; }
+    & em { font-style: italic; color: var(--brand-lime); font-weight: 600; }
+  }
+
+  /* ─── Scroll-to-top (fixed) ───────────────────────── */
+  .to-top {
+    position: fixed;
+    right: clamp(1rem, 2.5vw, 1.75rem);
+    bottom: clamp(1rem, 2.5vw, 1.75rem);
+    z-index: 20;
+    width: 44px;
+    height: 44px;
+    display: inline-grid;
+    place-items: center;
+    background: var(--accent);
+    color: var(--bg-invert);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    box-shadow: 0 6px 20px -6px rgba(31,32,34,0.35);
+    transition: background-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+
+    &:hover, &:focus-visible {
+      background: var(--accent-deep);
+      color: var(--bg-invert);
+      border-color: var(--accent-deep);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    & svg { width: 18px; height: 18px; stroke: currentColor; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       transition: none !important;
@@ -1056,6 +1223,67 @@
         <strong>Onze aanpak is gericht op aantoonbare grip:</strong>
         documenteerbare keten, minimale aanvalsoppervlakte, en governance die de toets der directie-aansprakelijkheid doorstaat.
       </p>
+    </div>
+  </section>
+
+  <!-- ── Compliance Engine (AI) ────────────────────── -->
+  <section class="ai-engine" id="compliance-engine" aria-labelledby="engine-title">
+    <div class="container">
+      <header class="engine-head">
+        <span class="eyebrow">Onze Hefboom · Numanski Compliance Engine</span>
+        <h2 id="engine-title">Gesupercharged door de Numanski <em>Compliance Engine</em>.</h2>
+        <p class="engine-sub">Waarom traditionele consultants maanden nodig hebben, en wij slechts weken.</p>
+      </header>
+
+      <div class="engine-body">
+        <p>
+          Bij Numanski BV geloven we in software-minimalisme, en dat passen we ook toe op onze werkwijze.
+          Wij geloven niet in het handmatig vullen van eindeloze compliance-spreadsheets. Daarom nemen we onze
+          eigen, intern ontwikkelde <strong>Compliance Engine</strong> mee naar uw organisatie.
+        </p>
+
+        <p>
+          Dit geavanceerde AI-systeem ondersteunt onze interim-management en audit-werkzaamheden op drie niveaus:
+        </p>
+
+        <ol class="engine-pillars">
+          <li>
+            <span class="engine-pillar-tag" aria-hidden="true">P</span>
+            <div>
+              <h3>Processen</h3>
+              <p>Het vertaalt ruwe interviewnotities van uw directie razendsnel naar vlijmscherpe, minimalistische ISO- en NIS2-beleidsteksten — zonder corporate bullshit.</p>
+            </div>
+          </li>
+          <li>
+            <span class="engine-pillar-tag" aria-hidden="true">S</span>
+            <div>
+              <h3>Systemen</h3>
+              <p>Het analyseert dependency-bomen en stelt direct 'vanilla' code-alternatieven voor om risicovolle third-party pakketten te elimineren.</p>
+            </div>
+          </li>
+          <li>
+            <span class="engine-pillar-tag" aria-hidden="true">O</span>
+            <div>
+              <h3>Organisatie</h3>
+              <p>Het genereert op maat gemaakte coaching- en trainingsplannen op basis van de daadwerkelijk aangetroffen code-bloat in uw repositories.</p>
+            </div>
+          </li>
+        </ol>
+
+        <aside class="engine-guarantee" aria-labelledby="engine-guarantee-title">
+          <h3 id="engine-guarantee-title">
+            <span aria-hidden="true">🔒</span>
+            Onze Harde Security-Garantie
+          </h3>
+          <p>
+            Als Enterprise Security Architects nemen we uw privacy serieus. Onze Compliance Engine draait in een
+            streng beveiligde, geïsoleerde omgeving met een strikte <em>Zero-Data-Retention</em> policy.
+            Uw broncode en bedrijfsgeheimen worden <strong>nooit gedeeld met publieke cloud-modellen</strong>
+            en worden <strong>nooit gebruikt voor training</strong>. De AI is onze hefboom; de 25+ jaar
+            praktijkervaring van Marco Numanski is uw kwaliteitsgarantie.
+          </p>
+        </aside>
+      </div>
     </div>
   </section>
 
@@ -1305,6 +1533,13 @@
   </section>
 
 </main>
+
+<a class="to-top" href="#top" aria-label="Terug naar boven">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M12 19V5"/>
+    <path d="M5 12l7-7 7 7"/>
+  </svg>
+</a>
 
 <footer class="site-footer">
   <div class="container">

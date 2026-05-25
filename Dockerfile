@@ -10,7 +10,6 @@ COPY nginx.conf /etc/nginx/conf.d/numanski.conf
 
 # Statische bestanden
 COPY index.html \
-     pso-tool.html \
      compliance-scan-tool.html \
      /usr/share/nginx/html/
 
