@@ -1,6 +1,0 @@
-# Alleen wat de image nodig heeft. Whitelist-aanpak.
-*
-
-!index.html
-!compliance-scan-tool.html
-!nginx.conf
